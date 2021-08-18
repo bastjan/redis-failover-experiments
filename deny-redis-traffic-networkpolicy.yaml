@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-redis-traffic
+spec:
+  podSelector:
+    matchLabels:
+      release: redis-test-cluster
+
+  # Exception for test-client
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            role: client
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            role: client
+
+  policyTypes:
+  - Ingress
+  - Egress
